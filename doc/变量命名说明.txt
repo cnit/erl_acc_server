@@ -1,0 +1,22 @@
+后面参与编码的兄弟请严格按照下面规则来写，谢谢~
+
+
+
+账号名acc
+账号信息account::#user_info{}
+
+密码：传入值pw ，内部使用password
+
+验证Key : Key
+
+服务器有关变量 prefix="Server" ，例如ServerID
+
+ets表名在record前加ets前缀
+
+mnesia表名，record前加db前缀
+
+
+
+
+
+

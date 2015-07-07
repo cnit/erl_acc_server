@@ -1,0 +1,40 @@
+自定义类型:请参见type.hrl
+
+
+
+下面的说明都是系统预定义类型（可能会随着版本变化而变化）:
+1.calendar:datetime() 
+   已定义的函数
+
+2.数据类型
+atom  可以是任意原子
+atom() 
+list()
+integer()
+tuple()
+pid()
+any()
+binary()
+constraint()
+module()
+timeout()
+inet:socket()
+port()
+fun()
+mfa()
+node()
+none()
+no_return()
+string()
+byte()  0..255
+bool()
+char()
+1..60  参数是个数字，并且在[1,60]之间
+
+3.可以定义变量，但是变量必须出现两次或以上
+
+4.可以是定义在各个模块-type中的类型例如
+inet:socket() ,并且要用-export_type导出
+所以可以自定义type
+
+5.可以直接使用变量名，只要注明类型 -spec valid_rolename(RoleName::binary()) -> true | binary().  

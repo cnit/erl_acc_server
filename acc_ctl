@@ -1,0 +1,150 @@
+#!/bin/bash
+
+##账号服务器控制脚本
+##------------------------
+## author:sunface
+## mail:cto@188.com
+##------------------------
+
+
+
+##------------------------
+## 内部API
+##------------------------
+help ()
+{
+    echo "acc_ctl 使用说明"
+    echo "基本语法: acc_ctl 命令模块 参数"
+    echo "命令模块："
+    echo "help                  	显示当前帮助内容"
+	echo "make						编译项目中改变的文件"
+    echo "rebuild                  	重新编译整个项目"
+    echo "start 	             	启动服务器"
+    echo "stop                 		停止服务器"
+    echo "backup       				备份数据库"
+    echo "hot_update				热更新"
+	echo "manager 					管理服务器"
+    echo ""
+    exit 0
+}
+
+make_erl() {
+	start=`date +%s`
+	
+	make_erl
+	
+	end=`date +%s`
+	dif=$[ end - start ]
+	echo "make用时   :  $dif 秒"
+	date +%T%n%D 
+}
+
+rebuild() {
+	start=`date +%s`
+	
+	clean_erl
+	make_erl
+	
+	end=`date +%s`
+	dif=$[ end - start ]
+	echo "rebuild用时:	$dif 秒"
+	date +%T%n%D 
+	}
+
+start_server() {
+	start=`date +%s`
+	
+	start_app account_server
+	
+	end=`date +%s`
+	dif=$[ end - start ]
+	echo "服务器总运行时间   :  $dif秒"
+	date +%T%n%D 
+}
+
+stop_server() {
+	stop_app account_server
+}
+
+start_app() {
+	APP=$1
+	COMMAND=`php script/command.php get_start_command $APP; exit $?`
+	
+	if [ $? -eq 0 ] ; then 
+		echo "$COMMAND"
+		bash -c "$COMMAND"
+	else
+		echo "$COMMAND"
+		exit
+	fi
+}
+
+stop_app() {
+	APP=$1
+	COMMAND=`php script/command.php get_stop_command $APP; exit $?`
+	if [ $? -eq 0 ] ; then 
+		echo "$COMMAND"
+		bash -c "$COMMAND"
+	else
+		echo "$COMMAND";
+		exit
+	fi
+}
+make_erl() {
+	make
+}
+
+clean_erl() {
+	rm -rf ebin
+}
+
+hot_update() {
+	FILE=$1
+	COMMAND=`php script/command.php hot_update account_server $FILE; exit $?`
+	if [ $? -eq 0 ] ; then 
+		bash -c "$COMMAND"
+	else
+		echo $COMMAND;
+		exit
+	fi
+}
+
+backup() 
+{
+	APP=$1
+	COMMAND=`php script/command.php backup $APP; exit $?`
+	if [ $? -eq 0 ] ; then 
+		bash -c "$COMMAND"
+	else
+		echo $COMMAND;
+		exit
+	fi
+}
+
+##------------------------
+## 外部接口
+##------------------------
+
+## 获取控制命令
+TARGET=$1
+shift
+case $TARGET in
+	help) help ;;
+
+	make) make $* ;;
+
+	rebuild) rebuild $* ;;
+	
+	start) start_server $*;;
+	
+	stop) stop_server $*;;
+
+	backup) backup account_server;;
+	
+	hot_update) hot_update $*;;
+
+	manager) mananger $*;;
+	
+	*) help ;;
+esac
+

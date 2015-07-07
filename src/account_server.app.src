@@ -1,0 +1,23 @@
+{application, account_server, [
+	{description, ""},
+	{vsn, "0.1.0"},
+	{id, "git"},
+	{modules, []},
+	{registered, []},
+	{applications, [
+		kernel,
+		stdlib,
+		cowboy,
+		mnesia,
+		lager
+	]},
+	{mod, {account_server_app, []}},
+	{env, []},
+	{lager,[	{colored,true},
+		    	{log_root, "/data/logs/account_server"},
+  			{handlers, [
+   				 {lager_console_backend, debug},
+   		 		 {lager_file_backend, [{file, "error.log"}, {level, error}]},
+    				 {lager_file_backend, [{file, "console.log"}, {level, info}]}]}
+	]}
+]}.

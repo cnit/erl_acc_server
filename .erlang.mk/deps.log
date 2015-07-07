@@ -1,0 +1,3 @@
+/data/account_server/deps/cowboy
+/data/account_server/deps/cowlib
+/data/account_server/deps/ranch
